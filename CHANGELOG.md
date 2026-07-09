@@ -13,3 +13,4 @@ All notable changes to InvoiceLoop are documented here.
 - Prisma-backed clients and invoices with seed data.
 - Demo login with hashed password and httpOnly cookie sessions.
 - Auth-protected CSV export for filtered invoice views.
+- SEO metadata, sitemap, robots rules, and custom 404 page.
