@@ -102,7 +102,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      name: "Akhilesh",
+      name: "Demo User",
       email: "demo@invoiceloop.app",
       passwordHash: hashPassword("demo1234"),
     },
