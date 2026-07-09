@@ -71,7 +71,7 @@ export default async function Home() {
               className="inline-flex min-h-11 items-center rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
               href="/invoices"
             >
-              New invoice
+              Create invoice
             </Link>
             <form action={logout}>
               <button className="min-h-11 rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold">
