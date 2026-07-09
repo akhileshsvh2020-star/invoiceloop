@@ -12,6 +12,7 @@ import {
   deleteClient as deleteClientAction,
   updateClient,
 } from "./actions";
+import { logout } from "@/app/login/actions";
 
 type ClientDraft = {
   name: string;
@@ -27,8 +28,10 @@ const emptyDraft: ClientDraft = {
 
 export function ClientWorkspace({
   clients,
+  currentUser,
 }: {
   clients: ClientSummaryRecord[];
+  currentUser: { name: string; email: string };
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -113,7 +116,10 @@ export function ClientWorkspace({
               </span>
             </span>
           </Link>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-[var(--muted)]">
+              {currentUser.name}
+            </span>
             <Link
               className="inline-flex min-h-11 items-center rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold"
               href="/"
@@ -126,6 +132,11 @@ export function ClientWorkspace({
             >
               Invoices
             </Link>
+            <form action={logout}>
+              <button className="min-h-11 rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold">
+                Sign out
+              </button>
+            </form>
           </div>
         </header>
 

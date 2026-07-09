@@ -1,6 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
+const { randomBytes, scryptSync, timingSafeEqual } = require("crypto");
 
 const prisma = new PrismaClient();
+
+function hashPassword(password, salt = randomBytes(16).toString("hex")) {
+  const key = scryptSync(password, salt, 64).toString("hex");
+  return `${salt}:${key}`;
+}
 
 const clients = [
   {
@@ -89,8 +95,18 @@ const invoices = [
 ];
 
 async function main() {
+  await prisma.session.deleteMany();
+  await prisma.user.deleteMany();
   await prisma.invoice.deleteMany();
   await prisma.client.deleteMany();
+
+  await prisma.user.create({
+    data: {
+      name: "Akhilesh",
+      email: "demo@invoiceloop.app",
+      passwordHash: hashPassword("demo1234"),
+    },
+  });
 
   for (const client of clients) {
     await prisma.client.create({ data: client });

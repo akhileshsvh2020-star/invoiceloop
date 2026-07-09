@@ -1,4 +1,5 @@
 import { getClientWorkspaceData } from "@/lib/invoice-data";
+import { requireUser } from "@/lib/auth";
 import { ClientWorkspace } from "./workspace";
 
 export const metadata = {
@@ -7,7 +8,8 @@ export const metadata = {
 };
 
 export default async function ClientsPage() {
+  const user = await requireUser();
   const clients = await getClientWorkspaceData();
 
-  return <ClientWorkspace clients={clients} />;
+  return <ClientWorkspace clients={clients} currentUser={user} />;
 }

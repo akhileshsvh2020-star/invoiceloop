@@ -4,6 +4,8 @@ import {
   getDashboardData,
 } from "@/lib/invoice-data";
 import Link from "next/link";
+import { requireUser } from "@/lib/auth";
+import { logout } from "@/app/login/actions";
 
 const statusStyles: Record<InvoiceStatus, string> = {
   sent: "border-[#c79334]/30 bg-[#fff5d8] text-[#7a5416]",
@@ -20,6 +22,7 @@ const statusLabels: Record<InvoiceStatus, string> = {
 };
 
 export default async function Home() {
+  const user = await requireUser();
   const { clients, invoices, clientSummaries, metrics } =
     await getDashboardData();
   const latestInvoices = invoices.slice(0, 4);
@@ -58,12 +61,22 @@ export default async function Home() {
               </Link>
             ))}
           </nav>
-          <Link
-            className="inline-flex min-h-11 items-center rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
-            href="/invoices"
-          >
-            New invoice
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-[var(--muted)]">
+              {user.name}
+            </span>
+            <Link
+              className="inline-flex min-h-11 items-center rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
+              href="/invoices"
+            >
+              New invoice
+            </Link>
+            <form action={logout}>
+              <button className="min-h-11 rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold">
+                Sign out
+              </button>
+            </form>
+          </div>
         </header>
 
         <section
@@ -152,8 +165,8 @@ export default async function Home() {
               />
             </div>
             <p className="mt-6 rounded-md border border-white/10 bg-white/5 p-4 text-sm leading-6 text-white/75">
-              Demo account: demo@invoiceloop.app / demo1234. Production auth
-              and row-level permissions are planned in the next milestone.
+              Demo account: demo@invoiceloop.app / demo1234. Sessions are
+              stored in httpOnly cookies and protected server-side.
             </p>
           </aside>
         </section>

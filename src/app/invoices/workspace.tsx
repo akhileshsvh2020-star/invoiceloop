@@ -14,6 +14,7 @@ import {
   deleteInvoice as deleteInvoiceAction,
   updateInvoice,
 } from "./actions";
+import { logout } from "@/app/login/actions";
 
 const statuses: InvoiceStatus[] = ["draft", "sent", "paid", "overdue"];
 
@@ -51,9 +52,11 @@ const emptyDraft: InvoiceDraft = {
 
 export function InvoiceWorkspace({
   clients,
+  currentUser,
   invoices,
 }: {
   clients: ClientRecord[];
+  currentUser: { name: string; email: string };
   invoices: InvoiceRecord[];
 }) {
   const router = useRouter();
@@ -163,12 +166,22 @@ export function InvoiceWorkspace({
               </span>
             </span>
           </Link>
-          <Link
-            className="inline-flex min-h-11 items-center rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold"
-            href="/"
-          >
-            Dashboard
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-[var(--muted)]">
+              {currentUser.name}
+            </span>
+            <Link
+              className="inline-flex min-h-11 items-center rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold"
+              href="/"
+            >
+              Dashboard
+            </Link>
+            <form action={logout}>
+              <button className="min-h-11 rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold">
+                Sign out
+              </button>
+            </form>
+          </div>
         </header>
 
         <section className="grid gap-4 sm:grid-cols-3">

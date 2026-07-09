@@ -10,14 +10,16 @@ Built for Digital Heroes digitalheroesco.com training task.
 ## Features
 
 - Track collected, outstanding, and overdue invoice totals.
+- Sign in with a seeded demo account backed by httpOnly session cookies.
 - Manage invoices across draft, sent, paid, and overdue states.
+- Create, edit, and delete billing clients.
 - Review client billing health from a compact dashboard.
 - Search invoice records and prepare exports.
 - Designed with responsive, keyboard-friendly UI patterns.
 
 ## Tech Stack
 
-Next.js App Router, TypeScript, Tailwind CSS, React, Prisma, and SQLite for the local persisted data layer.
+Next.js App Router, TypeScript, Tailwind CSS, React, Prisma, SQLite, Zod, and Node crypto password/session utilities.
 
 ## Quick Start
 
@@ -58,7 +60,7 @@ pnpm build
 
 - [x] Product plan and dashboard shell.
 - [x] Database schema and seed data.
-- [ ] Auth and protected routes.
+- [x] Auth and protected routes.
 - [x] Client CRUD.
 - [x] Invoice CRUD.
 - [ ] Client CRUD.
