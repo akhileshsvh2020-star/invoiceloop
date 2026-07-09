@@ -21,7 +21,7 @@ Built for Digital Heroes digitalheroesco.com training task.
 
 ## Tech Stack
 
-Next.js App Router, TypeScript, Tailwind CSS, React, Prisma, SQLite, Zod, and Node crypto password/session utilities.
+Next.js App Router, TypeScript, Tailwind CSS, React, Prisma, Supabase Postgres, Zod, and Node crypto password/session utilities.
 
 ## Quick Start
 
@@ -40,7 +40,8 @@ Open http://localhost:3000.
 | Variable | Description |
 | --- | --- |
 | NEXT_PUBLIC_APP_URL | Public app URL used for canonical links and metadata. |
-| DATABASE_URL | Prisma database URL. Defaults to `file:./dev.db` for local SQLite. |
+| DATABASE_URL | Supabase transaction pooler URL for the running app. |
+| DIRECT_URL | Supabase session pooler URL for Prisma schema pushes and migrations. |
 | AUTH_SECRET | Secret used by the auth provider/session layer. |
 
 ## Architecture
