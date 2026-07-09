@@ -137,6 +137,9 @@ export async function getDashboardData() {
 
     return {
       ...client,
+      invoiceCount: clientInvoices.length,
+      openCount,
+      overdueCount,
       lifetimeBilled,
       state:
         overdueCount > 0
@@ -204,4 +207,40 @@ export async function getClientWorkspaceData() {
             : "clear",
     };
   });
+}
+
+export async function getReportsData() {
+  const { clients, invoices, clientSummaries, metrics } =
+    await getDashboardData();
+  const statusOrder: InvoiceStatus[] = ["paid", "sent", "overdue", "draft"];
+
+  const statusBreakdown = statusOrder.map((status) => {
+    const matchingInvoices = invoices.filter((invoice) => invoice.status === status);
+    const amountCents = matchingInvoices.reduce(
+      (total, invoice) => total + invoice.amountCents,
+      0,
+    );
+
+    return {
+      status,
+      count: matchingInvoices.length,
+      amountCents,
+      share:
+        invoices.length > 0
+          ? Math.round((matchingInvoices.length / invoices.length) * 100)
+          : 0,
+    };
+  });
+
+  const topClients = [...clientSummaries]
+    .sort((a, b) => b.lifetimeBilled - a.lifetimeBilled)
+    .slice(0, 4);
+
+  return {
+    clients,
+    invoices,
+    metrics,
+    statusBreakdown,
+    topClients,
+  };
 }

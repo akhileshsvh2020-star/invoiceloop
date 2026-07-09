@@ -14,3 +14,4 @@ All notable changes to InvoiceLoop are documented here.
 - Demo login with hashed password and httpOnly cookie sessions.
 - Auth-protected CSV export for filtered invoice views.
 - SEO metadata, sitemap, robots rules, and custom 404 page.
+- Reports page with status breakdown and top-client revenue summaries.

@@ -15,6 +15,7 @@ Built for Digital Heroes digitalheroesco.com training task.
 - Create, edit, and delete billing clients.
 - Review client billing health from a compact dashboard.
 - Search invoice records and export filtered CSV files.
+- Review reports for invoice status and client revenue.
 - Ship crawl basics with metadata, sitemap, robots rules, and a custom 404.
 - Designed with responsive, keyboard-friendly UI patterns.
 
@@ -66,6 +67,7 @@ pnpm build
 - [x] Invoice CRUD.
 - [x] Search and filters.
 - [x] CSV export.
+- [x] Reports page.
 - [x] SEO basics and custom 404.
 - [ ] Pagination.
 - [ ] Deployment, screenshots, demo video, and case study.

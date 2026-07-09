@@ -53,6 +53,8 @@ export default async function Home() {
                     ? "/invoices"
                     : item === "Clients"
                       ? "/clients"
+                      : item === "Reports"
+                        ? "/reports"
                       : `#${item.toLowerCase()}`
                 }
                 key={item}
