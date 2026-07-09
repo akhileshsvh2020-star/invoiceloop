@@ -69,9 +69,18 @@ select:disabled {
   min-height: 44px;
   align-items: center;
   border-radius: 6px;
-  border: 1px solid var(--line);
-  background: #ffffff;
+  border: 1px solid transparent;
+  background: transparent;
   padding: 0 16px;
   font-size: 14px;
   font-weight: 600;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.nav-button:hover,
+.nav-button:focus-visible {
+  border-color: var(--line);
+  background: #ffffff;
 }
