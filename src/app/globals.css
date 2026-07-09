@@ -49,6 +49,28 @@ select:disabled {
   background: #176f6233;
 }
 
+.route-progress {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  transition:
+    opacity 120ms ease,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.route-progress-active {
+  opacity: 1;
+  transform: scaleX(0.82);
+}
+
 .field {
   min-height: 44px;
   width: 100%;
