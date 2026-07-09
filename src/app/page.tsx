@@ -55,19 +55,9 @@ export default function Home() {
               </a>
             ))}
           </nav>
-          <div className="flex flex-wrap gap-2">
-            <a
-              className="inline-flex min-h-11 items-center rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
-              href="https://digitalheroesco.com"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Official website
-            </a>
-            <button className="min-h-11 rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]">
-              New invoice
-            </button>
-          </div>
+          <button className="min-h-11 rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]">
+            New invoice
+          </button>
         </header>
 
         <section
