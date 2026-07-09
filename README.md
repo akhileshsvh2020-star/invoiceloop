@@ -14,7 +14,7 @@ Built for Digital Heroes digitalheroesco.com training task.
 - Manage invoices across draft, sent, paid, and overdue states.
 - Create, edit, and delete billing clients.
 - Review client billing health from a compact dashboard.
-- Search invoice records and prepare exports.
+- Search invoice records and export filtered CSV files.
 - Designed with responsive, keyboard-friendly UI patterns.
 
 ## Tech Stack
@@ -63,9 +63,9 @@ pnpm build
 - [x] Auth and protected routes.
 - [x] Client CRUD.
 - [x] Invoice CRUD.
-- [ ] Client CRUD.
 - [x] Search and filters.
-- [ ] Pagination and export.
+- [x] CSV export.
+- [ ] Pagination.
 - [ ] Deployment, screenshots, demo video, and case study.
 
 ## License

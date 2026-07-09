@@ -94,6 +94,21 @@ export function InvoiceWorkspace({
     return { paid, open, count: invoices.length };
   }, [invoices]);
 
+  const exportHref = useMemo(() => {
+    const params = new URLSearchParams();
+
+    if (query.trim()) {
+      params.set("q", query.trim());
+    }
+
+    if (status !== "all") {
+      params.set("status", status);
+    }
+
+    const queryString = params.toString();
+    return `/api/invoices/export${queryString ? `?${queryString}` : ""}`;
+  }, [query, status]);
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -345,6 +360,12 @@ export function InvoiceWorkspace({
                     </option>
                   ))}
                 </select>
+                <a
+                  className="inline-flex min-h-11 items-center justify-center rounded-md border border-[var(--line)] px-4 text-sm font-semibold"
+                  href={exportHref}
+                >
+                  Export CSV
+                </a>
               </div>
             </div>
 

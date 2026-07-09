@@ -12,3 +12,4 @@ All notable changes to InvoiceLoop are documented here.
 - Open-source repo files for README, license, contribution guide, and env example.
 - Prisma-backed clients and invoices with seed data.
 - Demo login with hashed password and httpOnly cookie sessions.
+- Auth-protected CSV export for filtered invoice views.
