@@ -1,52 +1,32 @@
-const invoices = [
-  {
-    id: "INV-1048",
-    client: "Northstar Studio",
-    title: "Brand landing page",
-    amount: "$3,200",
-    due: "Due today",
-    status: "Sent",
-  },
-  {
-    id: "INV-1047",
-    client: "Acme Commerce",
-    title: "Checkout audit",
-    amount: "$1,850",
-    due: "Overdue 4d",
-    status: "Overdue",
-  },
-  {
-    id: "INV-1046",
-    client: "BrightDesk",
-    title: "Monthly retainer",
-    amount: "$4,500",
-    due: "Paid Jul 08",
-    status: "Paid",
-  },
-  {
-    id: "INV-1045",
-    client: "Mira Health",
-    title: "Dashboard prototype",
-    amount: "$2,400",
-    due: "Due Jul 14",
-    status: "Draft",
-  },
-];
+import {
+  clients,
+  formatCurrency,
+  getClientName,
+  getClientSummaries,
+  getDashboardMetrics,
+  invoices,
+  type InvoiceStatus,
+} from "@/lib/demo-data";
 
-const clients = [
-  ["Northstar Studio", "$9,800", "3 open"],
-  ["Acme Commerce", "$6,240", "1 overdue"],
-  ["BrightDesk", "$18,500", "clear"],
-];
+const statusStyles: Record<InvoiceStatus, string> = {
+  sent: "border-[#c79334]/30 bg-[#fff5d8] text-[#7a5416]",
+  overdue: "border-[#a64618]/25 bg-[#ffe8df] text-[#923a14]",
+  paid: "border-[#176f62]/25 bg-[#def6ed] text-[#10564c]",
+  draft: "border-stone-300 bg-stone-100 text-stone-700",
+};
 
-const statusStyles: Record<string, string> = {
-  Sent: "border-[#c79334]/30 bg-[#fff5d8] text-[#7a5416]",
-  Overdue: "border-[#a64618]/25 bg-[#ffe8df] text-[#923a14]",
-  Paid: "border-[#176f62]/25 bg-[#def6ed] text-[#10564c]",
-  Draft: "border-stone-300 bg-stone-100 text-stone-700",
+const statusLabels: Record<InvoiceStatus, string> = {
+  sent: "Sent",
+  overdue: "Overdue",
+  paid: "Paid",
+  draft: "Draft",
 };
 
 export default function Home() {
+  const metrics = getDashboardMetrics();
+  const clientSummaries = getClientSummaries();
+  const latestInvoices = invoices.slice(0, 4);
+
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-4 sm:px-6 lg:px-8">
@@ -75,9 +55,19 @@ export default function Home() {
               </a>
             ))}
           </nav>
-          <button className="min-h-11 rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]">
-            New invoice
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <a
+              className="inline-flex min-h-11 items-center rounded-md border border-[var(--line)] bg-white px-4 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
+              href="https://digitalheroesco.com"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Official website
+            </a>
+            <button className="min-h-11 rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]">
+              New invoice
+            </button>
+          </div>
         </header>
 
         <section
@@ -99,18 +89,31 @@ export default function Home() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 rounded-lg border border-[var(--line)] bg-white p-3 sm:min-w-72">
-                <Metric label="Collected" value="$18.4k" />
-                <Metric label="Outstanding" value="$7.5k" />
-                <Metric label="Overdue" value="$1.8k" tone="warn" />
-                <Metric label="Avg. paid" value="6.2d" />
+                <Metric label="Collected" value={formatCurrency(metrics.paid)} />
+                <Metric
+                  label="Outstanding"
+                  value={formatCurrency(metrics.outstanding)}
+                />
+                <Metric
+                  label="Overdue"
+                  value={formatCurrency(metrics.overdue)}
+                  tone="warn"
+                />
+                <Metric
+                  label="Avg. paid"
+                  value={`${metrics.paidWithinDays.toFixed(1)}d`}
+                />
               </div>
             </div>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
               {[
                 ["Next action", "Send reminder to Acme Commerce"],
-                ["Pipeline", "8 invoices across 6 clients"],
-                ["Health", "72% collection rate this month"],
+                [
+                  "Pipeline",
+                  `${invoices.length} invoices across ${clients.length} clients`,
+                ],
+                ["Health", `${metrics.paidRate}% collection rate this month`],
               ].map(([label, value]) => (
                 <div
                   className="rounded-md border border-[var(--line)] bg-white p-4"
@@ -135,9 +138,22 @@ export default function Home() {
               </span>
             </div>
             <div className="mt-6 space-y-4">
-              <Progress label="Paid" value="72%" width="72%" />
-              <Progress label="Sent" value="21%" width="21%" />
-              <Progress label="Overdue" value="7%" width="7%" warn />
+              <Progress
+                label="Paid"
+                value={`${metrics.paidRate}%`}
+                width={`${metrics.paidRate}%`}
+              />
+              <Progress
+                label="Sent"
+                value={`${metrics.sentRate}%`}
+                width={`${metrics.sentRate}%`}
+              />
+              <Progress
+                label="Overdue"
+                value={`${metrics.overdueRate}%`}
+                width={`${metrics.overdueRate}%`}
+                warn
+              />
             </div>
             <p className="mt-6 rounded-md border border-white/10 bg-white/5 p-4 text-sm leading-6 text-white/75">
               Demo account: demo@invoiceloop.app / demo1234. Production auth
@@ -183,7 +199,7 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoices.map((invoice) => (
+                  {latestInvoices.map((invoice) => (
                     <tr className="border-b border-[var(--line)]" key={invoice.id}>
                       <td className="px-4 py-4">
                         <span className="block font-semibold text-[var(--ink)]">
@@ -193,14 +209,20 @@ export default function Home() {
                           {invoice.title}
                         </span>
                       </td>
-                      <td className="px-4 py-4 font-medium">{invoice.client}</td>
-                      <td className="px-4 py-4 font-semibold">{invoice.amount}</td>
-                      <td className="px-4 py-4 text-[var(--muted)]">{invoice.due}</td>
+                      <td className="px-4 py-4 font-medium">
+                        {getClientName(invoice.clientId)}
+                      </td>
+                      <td className="px-4 py-4 font-semibold">
+                        {formatCurrency(invoice.amountCents)}
+                      </td>
+                      <td className="px-4 py-4 text-[var(--muted)]">
+                        {formatDueLabel(invoice)}
+                      </td>
                       <td className="px-4 py-4">
                         <span
                           className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${statusStyles[invoice.status]}`}
                         >
-                          {invoice.status}
+                          {statusLabels[invoice.status]}
                         </span>
                       </td>
                     </tr>
@@ -218,24 +240,26 @@ export default function Home() {
               </button>
             </div>
             <div className="mt-4 space-y-3">
-              {clients.map(([name, value, state]) => (
+              {clientSummaries.slice(0, 3).map((client) => (
                 <div
                   className="rounded-md border border-[var(--line)] bg-[var(--panel)] p-4"
-                  key={name}
+                  key={client.id}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="font-semibold text-[var(--ink)]">{name}</p>
+                      <p className="font-semibold text-[var(--ink)]">
+                        {client.name}
+                      </p>
                       <p className="mt-1 text-sm text-[var(--muted)]">
-                        Lifetime billed
+                        {client.companyType}
                       </p>
                     </div>
                     <span className="text-right text-sm font-semibold">
-                      {value}
+                      {formatCurrency(client.lifetimeBilled)}
                     </span>
                   </div>
                   <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--accent)]">
-                    {state}
+                    {client.state}
                   </p>
                 </div>
               ))}
@@ -245,6 +269,25 @@ export default function Home() {
       </div>
     </main>
   );
+}
+
+function formatDueLabel(invoice: { status: InvoiceStatus; dueAt: string; paidAt?: string }) {
+  if (invoice.status === "paid" && invoice.paidAt) {
+    return `Paid ${formatShortDate(invoice.paidAt)}`;
+  }
+
+  if (invoice.status === "overdue") {
+    return "Overdue";
+  }
+
+  return `Due ${formatShortDate(invoice.dueAt)}`;
+}
+
+function formatShortDate(value: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "2-digit",
+  }).format(new Date(value));
 }
 
 function Metric({
