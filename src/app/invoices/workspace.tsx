@@ -59,17 +59,23 @@ const emptyDraft: InvoiceDraft = {
 export function InvoiceWorkspace({
   clients,
   currentUser,
+  initialClientId,
   invoices,
 }: {
   clients: ClientRecord[];
   currentUser: { name: string; email: string };
+  initialClientId?: string;
   invoices: InvoiceRecord[];
 }) {
   const router = useRouter();
+  const defaultClientId =
+    clients.find((client) => client.id === initialClientId)?.id ??
+    clients[0]?.id ??
+    "";
   const [isPending, startTransition] = useTransition();
   const [draft, setDraft] = useState<InvoiceDraft>({
     ...emptyDraft,
-    clientId: clients[0]?.id ?? "",
+    clientId: defaultClientId,
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -133,7 +139,7 @@ export function InvoiceWorkspace({
           id: editingId,
         });
         setEditingId(null);
-        setDraft({ ...emptyDraft, clientId: clients[0]?.id ?? "" });
+        setDraft({ ...emptyDraft, clientId: defaultClientId });
         router.refresh();
       });
     } else {
@@ -143,7 +149,7 @@ export function InvoiceWorkspace({
           amount: draft.amount,
           id: draft.id.trim() || `INV-${1050 + invoices.length}`,
         });
-        setDraft({ ...emptyDraft, clientId: clients[0]?.id ?? "" });
+        setDraft({ ...emptyDraft, clientId: defaultClientId });
         router.refresh();
       });
     }
@@ -339,7 +345,7 @@ export function InvoiceWorkspace({
                   className="min-h-11 rounded-md border border-[var(--line)] px-4 text-sm font-semibold"
                   onClick={() => {
                     setEditingId(null);
-                    setDraft({ ...emptyDraft, clientId: clients[0]?.id ?? "" });
+                    setDraft({ ...emptyDraft, clientId: defaultClientId });
                   }}
                   type="button"
                 >

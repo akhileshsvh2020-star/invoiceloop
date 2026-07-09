@@ -173,7 +173,7 @@ export function ClientWorkspace({
             </h1>
             <p className="mt-1 text-sm text-[var(--muted)]">
               {editingId
-                ? `Editing ${draft.name}. Save changes or cancel to return to create mode.`
+                ? `Editing ${draft.name}. Invoice totals are updated from invoice records.`
                 : "Store billing contacts before creating invoice records."}
             </p>
 
@@ -282,6 +282,10 @@ export function ClientWorkspace({
                       <MiniStat label="Status" value={client.state} warn={client.overdueCount > 0} />
                     </div>
                   </div>
+                  <p className="mt-3 text-xs font-medium text-[var(--muted)]">
+                    Billed amount and status are calculated from this client&apos;s
+                    invoices.
+                  </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
                       className={`rounded-md border px-3 py-2 text-xs font-semibold ${
@@ -294,6 +298,12 @@ export function ClientWorkspace({
                     >
                       {editingId === client.id ? "Editing" : "Edit"}
                     </button>
+                    <Link
+                      className="rounded-md border border-[var(--line)] bg-white px-3 py-2 text-xs font-semibold"
+                      href={`/invoices?clientId=${client.id}`}
+                    >
+                      Add invoice
+                    </Link>
                     <button
                       className="rounded-md border border-[#a64618]/30 bg-white px-3 py-2 text-xs font-semibold text-[#923a14]"
                       onClick={() => removeClient(client.id)}
