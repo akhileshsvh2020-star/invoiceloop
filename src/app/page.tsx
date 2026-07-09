@@ -3,6 +3,7 @@ import {
   type InvoiceStatus,
   getDashboardData,
 } from "@/lib/invoice-data";
+import Link from "next/link";
 
 const statusStyles: Record<InvoiceStatus, string> = {
   sent: "border-[#c79334]/30 bg-[#fff5d8] text-[#7a5416]",
@@ -42,21 +43,27 @@ export default async function Home() {
           </a>
           <nav aria-label="Primary navigation" className="flex flex-wrap gap-2">
             {["Dashboard", "Invoices", "Clients", "Reports"].map((item) => (
-              <a
+              <Link
                 className="rounded-md px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
-                href={item === "Invoices" ? "/invoices" : `#${item.toLowerCase()}`}
+                href={
+                  item === "Invoices"
+                    ? "/invoices"
+                    : item === "Clients"
+                      ? "/clients"
+                      : `#${item.toLowerCase()}`
+                }
                 key={item}
               >
                 {item}
-              </a>
+              </Link>
             ))}
           </nav>
-          <a
+          <Link
             className="inline-flex min-h-11 items-center rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--accent-strong)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
             href="/invoices"
           >
             New invoice
-          </a>
+          </Link>
         </header>
 
         <section
@@ -171,12 +178,12 @@ export default async function Home() {
                   className="min-h-11 w-full rounded-md border border-[var(--line)] px-3 text-sm sm:w-52"
                   placeholder="Search invoices"
                 />
-                <a
+                <Link
                   className="inline-flex min-h-11 items-center rounded-md border border-[var(--line)] px-3 text-sm font-semibold"
                   href="/invoices"
                 >
                   Export
-                </a>
+                </Link>
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -227,12 +234,12 @@ export default async function Home() {
           <div id="clients" className="rounded-lg border border-[var(--line)] bg-white p-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold tracking-tight">Clients</h2>
-              <a
+              <Link
                 className="inline-flex min-h-11 items-center rounded-md border border-[var(--line)] px-3 text-sm font-semibold"
-                href="/invoices"
+                href="/clients"
               >
                 Add
-              </a>
+              </Link>
             </div>
             <div className="mt-4 space-y-3">
               {clientSummaries.slice(0, 3).map((client) => (

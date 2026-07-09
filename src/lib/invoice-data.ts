@@ -10,6 +10,14 @@ export type ClientRecord = {
   createdAt: string;
 };
 
+export type ClientSummaryRecord = ClientRecord & {
+  invoiceCount: number;
+  openCount: number;
+  overdueCount: number;
+  lifetimeBilled: number;
+  state: string;
+};
+
 export type InvoiceRecord = {
   id: string;
   clientId: string;
@@ -153,4 +161,47 @@ export async function getDashboardData() {
       overdueRate,
     },
   };
+}
+
+export async function getClientWorkspaceData() {
+  const clients = await db.client.findMany({
+    where: { deletedAt: null },
+    include: {
+      invoices: {
+        where: { deletedAt: null },
+      },
+    },
+    orderBy: { name: "asc" },
+  });
+
+  return clients.map((client): ClientSummaryRecord => {
+    const lifetimeBilled = client.invoices.reduce(
+      (total, invoice) => total + invoice.amountCents,
+      0,
+    );
+    const overdueCount = client.invoices.filter(
+      (invoice) => invoice.status === "overdue",
+    ).length;
+    const openCount = client.invoices.filter(
+      (invoice) => invoice.status === "sent" || invoice.status === "overdue",
+    ).length;
+
+    return {
+      id: client.id,
+      name: client.name,
+      contactEmail: client.contactEmail,
+      companyType: client.companyType,
+      createdAt: client.createdAt.toISOString(),
+      invoiceCount: client.invoices.length,
+      openCount,
+      overdueCount,
+      lifetimeBilled,
+      state:
+        overdueCount > 0
+          ? `${overdueCount} overdue`
+          : openCount > 0
+            ? `${openCount} open`
+            : "clear",
+    };
+  });
 }

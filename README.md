@@ -59,7 +59,7 @@ pnpm build
 - [x] Product plan and dashboard shell.
 - [x] Database schema and seed data.
 - [ ] Auth and protected routes.
-- [ ] Client CRUD.
+- [x] Client CRUD.
 - [x] Invoice CRUD.
 - [ ] Client CRUD.
 - [x] Search and filters.
