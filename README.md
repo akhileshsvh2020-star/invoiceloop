@@ -3,7 +3,7 @@
 > A focused invoice and payment-tracking dashboard for freelancers and small service businesses.
 
 **Live demo:** coming after Vercel deployment  
-**Demo login:** demo@invoiceloop.app / demo1234
+**Demo login:** demo@invoiceloop.app / InvoiceLoop@2026
 
 Built for Digital Heroes digitalheroesco.com training task.
 

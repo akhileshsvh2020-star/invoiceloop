@@ -167,8 +167,8 @@ export default async function Home() {
               />
             </div>
             <p className="mt-6 rounded-md border border-white/10 bg-white/5 p-4 text-sm leading-6 text-white/75">
-              Demo account: demo@invoiceloop.app / demo1234. Sessions are
-              stored in httpOnly cookies and protected server-side.
+              Demo account: demo@invoiceloop.app / InvoiceLoop@2026.
+              Sessions are stored in httpOnly cookies and protected server-side.
             </p>
           </aside>
         </section>

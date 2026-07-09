@@ -104,7 +104,7 @@ async function main() {
     data: {
       name: "Demo User",
       email: "demo@invoiceloop.app",
-      passwordHash: hashPassword("demo1234"),
+      passwordHash: hashPassword("InvoiceLoop@2026"),
     },
   });
 

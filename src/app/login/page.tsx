@@ -57,7 +57,7 @@ export default async function LoginPage({
             Password
             <input
               className="field"
-              defaultValue="demo1234"
+              defaultValue="InvoiceLoop@2026"
               name="password"
               required
               type="password"
@@ -69,7 +69,7 @@ export default async function LoginPage({
         </form>
 
         <p className="mt-5 rounded-md border border-[var(--line)] bg-[var(--panel)] p-3 text-sm text-[var(--muted)]">
-          Demo credentials: demo@invoiceloop.app / demo1234
+          Demo credentials: demo@invoiceloop.app / InvoiceLoop@2026
         </p>
       </section>
     </main>
