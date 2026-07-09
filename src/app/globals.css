@@ -33,6 +33,18 @@ select {
   outline-offset: 3px;
 }
 
+button:not(:disabled),
+a,
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
 ::selection {
   background: #176f6233;
 }
