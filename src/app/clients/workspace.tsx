@@ -1,6 +1,12 @@
 "use client";
 
-import { FormEvent, useMemo, useState, useTransition } from "react";
+import {
+  FormEvent,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -38,6 +44,8 @@ export function ClientWorkspace({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState<ClientDraft>(emptyDraft);
+  const formRef = useRef<HTMLFormElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const filteredClients = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -85,6 +93,10 @@ export function ClientWorkspace({
       name: client.name,
       contactEmail: client.contactEmail,
       companyType: client.companyType,
+    });
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      nameInputRef.current?.focus();
     });
   }
 
@@ -148,14 +160,21 @@ export function ClientWorkspace({
 
         <section className="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
           <form
-            className="rounded-lg border border-[var(--line)] bg-white p-4"
+            className={`rounded-lg border bg-white p-4 transition ${
+              editingId
+                ? "border-[var(--accent)] shadow-[0_0_0_3px_rgba(23,111,98,0.12)]"
+                : "border-[var(--line)]"
+            }`}
             onSubmit={handleSubmit}
+            ref={formRef}
           >
             <h1 className="text-2xl font-semibold tracking-tight">
               {editingId ? "Edit client" : "Create client"}
             </h1>
             <p className="mt-1 text-sm text-[var(--muted)]">
-              Store billing contacts before creating invoice records.
+              {editingId
+                ? `Editing ${draft.name}. Save changes or cancel to return to create mode.`
+                : "Store billing contacts before creating invoice records."}
             </p>
 
             <div className="mt-5 grid gap-4">
@@ -166,6 +185,7 @@ export function ClientWorkspace({
                     setDraft({ ...draft, name: event.target.value })
                   }
                   placeholder="Northstar Studio"
+                  ref={nameInputRef}
                   required
                   value={draft.name}
                 />
@@ -208,8 +228,8 @@ export function ClientWorkspace({
                 </span>
               ) : null}
               {editingId ? (
-                <button
-                  className="min-h-11 rounded-md border border-[var(--line)] px-4 text-sm font-semibold"
+                  <button
+                    className="min-h-11 rounded-md border border-[var(--line)] px-4 text-sm font-semibold"
                   onClick={() => {
                     setEditingId(null);
                     setDraft(emptyDraft);
@@ -264,11 +284,15 @@ export function ClientWorkspace({
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
-                      className="rounded-md border border-[var(--line)] bg-white px-3 py-2 text-xs font-semibold"
+                      className={`rounded-md border px-3 py-2 text-xs font-semibold ${
+                        editingId === client.id
+                          ? "border-[var(--accent)] bg-[#def6ed] text-[var(--accent-strong)]"
+                          : "border-[var(--line)] bg-white"
+                      }`}
                       onClick={() => editClient(client)}
                       type="button"
                     >
-                      Edit
+                      {editingId === client.id ? "Editing" : "Edit"}
                     </button>
                     <button
                       className="rounded-md border border-[#a64618]/30 bg-white px-3 py-2 text-xs font-semibold text-[#923a14]"

@@ -1,6 +1,12 @@
 "use client";
 
-import { FormEvent, useMemo, useState, useTransition } from "react";
+import {
+  FormEvent,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -68,6 +74,8 @@ export function InvoiceWorkspace({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<InvoiceStatus | "all">("all");
+  const formRef = useRef<HTMLFormElement>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   const filteredInvoices = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -149,7 +157,11 @@ export function InvoiceWorkspace({
       title: invoice.title,
       status: invoice.status,
       amount: String(invoice.amountCents / 100),
-      dueAt: invoice.dueAt,
+      dueAt: invoice.dueAt.slice(0, 10),
+    });
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      titleInputRef.current?.focus();
     });
   }
 
@@ -207,14 +219,21 @@ export function InvoiceWorkspace({
 
         <section className="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
           <form
-            className="rounded-lg border border-[var(--line)] bg-white p-4"
+            className={`rounded-lg border bg-white p-4 transition ${
+              editingId
+                ? "border-[var(--accent)] shadow-[0_0_0_3px_rgba(23,111,98,0.12)]"
+                : "border-[var(--line)]"
+            }`}
             onSubmit={handleSubmit}
+            ref={formRef}
           >
             <h1 className="text-2xl font-semibold tracking-tight">
               {editingId ? "Edit invoice" : "Create invoice"}
             </h1>
             <p className="mt-1 text-sm text-[var(--muted)]">
-              Add a client invoice and track its collection status.
+              {editingId
+                ? `Editing ${editingId}. Save changes or cancel to return to create mode.`
+                : "Add a client invoice and track its collection status."}
             </p>
 
             <div className="mt-5 grid gap-4">
@@ -253,6 +272,7 @@ export function InvoiceWorkspace({
                     setDraft({ ...draft, title: event.target.value })
                   }
                   placeholder="Website implementation"
+                  ref={titleInputRef}
                   required
                   value={draft.title}
                 />
@@ -407,11 +427,15 @@ export function InvoiceWorkspace({
                       <td className="px-4 py-4">
                         <div className="flex gap-2">
                           <button
-                            className="rounded-md border border-[var(--line)] px-3 py-2 text-xs font-semibold"
+                            className={`rounded-md border px-3 py-2 text-xs font-semibold ${
+                              editingId === invoice.id
+                                ? "border-[var(--accent)] bg-[#def6ed] text-[var(--accent-strong)]"
+                                : "border-[var(--line)]"
+                            }`}
                             onClick={() => editInvoice(invoice)}
                             type="button"
                           >
-                            Edit
+                            {editingId === invoice.id ? "Editing" : "Edit"}
                           </button>
                           <button
                             className="rounded-md border border-[#a64618]/30 px-3 py-2 text-xs font-semibold text-[#923a14]"
