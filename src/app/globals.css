@@ -36,3 +36,18 @@ select {
 ::selection {
   background: #176f6233;
 }
+
+.field {
+  min-height: 44px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  padding: 0 12px;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.field:focus-visible {
+  outline: 2px solid var(--accent);
+}
