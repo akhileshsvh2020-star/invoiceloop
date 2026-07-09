@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { login } from "./actions";
+import { SubmitButton } from "./submit-button";
 
 export const metadata = {
   title: "Login - InvoiceLoop",
@@ -63,9 +64,7 @@ export default async function LoginPage({
               type="password"
             />
           </label>
-          <button className="min-h-11 rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white">
-            Sign in
-          </button>
+          <SubmitButton />
         </form>
 
         <p className="mt-5 rounded-md border border-[var(--line)] bg-[var(--panel)] p-3 text-sm text-[var(--muted)]">
