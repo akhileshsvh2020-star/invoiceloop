@@ -5,7 +5,7 @@
 **Live demo:** coming after Vercel deployment  
 **Demo login:** demo@invoiceloop.app / demo1234
 
-Built for the Digital Heroes full-stack developer trial.
+Built for Digital Heroes digitalheroesco.com training task.
 
 ## Features
 
@@ -17,12 +17,15 @@ Built for the Digital Heroes full-stack developer trial.
 
 ## Tech Stack
 
-Next.js App Router, TypeScript, Tailwind CSS, React, planned Supabase/Postgres auth and data layer.
+Next.js App Router, TypeScript, Tailwind CSS, React, Prisma, and SQLite for the local persisted data layer.
 
 ## Quick Start
 
 ```bash
 pnpm install
+cp .env.example .env
+pnpm db:push
+pnpm db:seed
 pnpm dev
 ```
 
@@ -33,7 +36,7 @@ Open http://localhost:3000.
 | Variable | Description |
 | --- | --- |
 | NEXT_PUBLIC_APP_URL | Public app URL used for canonical links and metadata. |
-| DATABASE_URL | Postgres connection string for the production data layer. |
+| DATABASE_URL | Prisma database URL. Defaults to `file:./dev.db` for local SQLite. |
 | AUTH_SECRET | Secret used by the auth provider/session layer. |
 
 ## Architecture
@@ -54,11 +57,13 @@ pnpm build
 ## Roadmap
 
 - [x] Product plan and dashboard shell.
-- [ ] Database schema and seed data.
+- [x] Database schema and seed data.
 - [ ] Auth and protected routes.
 - [ ] Client CRUD.
-- [ ] Invoice CRUD.
-- [ ] Search, filters, pagination, and export.
+- [x] Invoice CRUD.
+- [ ] Client CRUD.
+- [x] Search and filters.
+- [ ] Pagination and export.
 - [ ] Deployment, screenshots, demo video, and case study.
 
 ## License

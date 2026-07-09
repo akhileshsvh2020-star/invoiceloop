@@ -1,12 +1,8 @@
 import {
-  clients,
   formatCurrency,
-  getClientName,
-  getClientSummaries,
-  getDashboardMetrics,
-  invoices,
   type InvoiceStatus,
-} from "@/lib/demo-data";
+  getDashboardData,
+} from "@/lib/invoice-data";
 
 const statusStyles: Record<InvoiceStatus, string> = {
   sent: "border-[#c79334]/30 bg-[#fff5d8] text-[#7a5416]",
@@ -22,9 +18,9 @@ const statusLabels: Record<InvoiceStatus, string> = {
   draft: "Draft",
 };
 
-export default function Home() {
-  const metrics = getDashboardMetrics();
-  const clientSummaries = getClientSummaries();
+export default async function Home() {
+  const { clients, invoices, clientSummaries, metrics } =
+    await getDashboardData();
   const latestInvoices = invoices.slice(0, 4);
 
   return (
@@ -206,7 +202,7 @@ export default function Home() {
                         </span>
                       </td>
                       <td className="px-4 py-4 font-medium">
-                        {getClientName(invoice.clientId)}
+                        {invoice.clientName}
                       </td>
                       <td className="px-4 py-4 font-semibold">
                         {formatCurrency(invoice.amountCents)}

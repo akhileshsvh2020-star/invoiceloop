@@ -1,6 +1,6 @@
 # Architecture
 
-InvoiceLoop is planned as a single Next.js application with server-rendered pages, typed server actions, and a relational database. The app keeps the product surface small: clients, invoices, invoice items, dashboard metrics, and activity logs.
+InvoiceLoop is a single Next.js application with server-rendered pages, typed server actions, Prisma, and a relational database. The app keeps the product surface small: clients, invoices, dashboard metrics, and activity logs.
 
 ## Data Relationships
 
@@ -68,6 +68,6 @@ Production auth should be handled by Supabase Auth or Auth.js instead of hand-ro
 ## Key Decisions
 
 - Keep the domain narrow so the app feels finished rather than oversized.
-- Use a relational schema because invoices, clients, and line items have clear relationships.
+- Use a relational schema because invoices and clients have clear relationships.
 - Build the dashboard around payment collection health, not generic charts.
 - Store activity logs immutably so reviewers can see auditability and real product thinking.

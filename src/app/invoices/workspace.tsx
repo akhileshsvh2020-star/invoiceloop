@@ -1,15 +1,19 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  clients,
   formatCurrency,
-  getClientName,
-  invoices as seedInvoices,
-  type Invoice,
+  type ClientRecord,
+  type InvoiceRecord,
   type InvoiceStatus,
-} from "@/lib/demo-data";
+} from "@/lib/invoice-data";
+import {
+  createInvoice,
+  deleteInvoice as deleteInvoiceAction,
+  updateInvoice,
+} from "./actions";
 
 const statuses: InvoiceStatus[] = ["draft", "sent", "paid", "overdue"];
 
@@ -38,16 +42,26 @@ type InvoiceDraft = {
 
 const emptyDraft: InvoiceDraft = {
   id: "",
-  clientId: clients[0]?.id ?? "",
+  clientId: "",
   title: "",
   status: "draft",
   amount: "",
   dueAt: "2026-07-31",
 };
 
-export function InvoiceWorkspace() {
-  const [invoices, setInvoices] = useState<Invoice[]>(seedInvoices);
-  const [draft, setDraft] = useState<InvoiceDraft>(emptyDraft);
+export function InvoiceWorkspace({
+  clients,
+  invoices,
+}: {
+  clients: ClientRecord[];
+  invoices: InvoiceRecord[];
+}) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [draft, setDraft] = useState<InvoiceDraft>({
+    ...emptyDraft,
+    clientId: clients[0]?.id ?? "",
+  });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<InvoiceStatus | "all">("all");
@@ -58,11 +72,10 @@ export function InvoiceWorkspace() {
     return invoices
       .filter((invoice) => status === "all" || invoice.status === status)
       .filter((invoice) => {
-        const clientName = getClientName(invoice.clientId).toLowerCase();
         return (
           invoice.id.toLowerCase().includes(needle) ||
           invoice.title.toLowerCase().includes(needle) ||
-          clientName.includes(needle)
+          invoice.clientName.toLowerCase().includes(needle)
         );
       })
       .sort((a, b) => b.dueAt.localeCompare(a.dueAt));
@@ -87,42 +100,30 @@ export function InvoiceWorkspace() {
     }
 
     if (editingId) {
-      setInvoices((current) =>
-        current.map((invoice) =>
-          invoice.id === editingId
-            ? {
-                ...invoice,
-                clientId: draft.clientId,
-                title: draft.title.trim(),
-                status: draft.status,
-                amountCents,
-                dueAt: draft.dueAt,
-                paidAt: draft.status === "paid" ? "2026-07-09" : undefined,
-              }
-            : invoice,
-        ),
-      );
-      setEditingId(null);
+      startTransition(async () => {
+        await updateInvoice(editingId, {
+          ...draft,
+          amount: draft.amount,
+          id: editingId,
+        });
+        setEditingId(null);
+        setDraft({ ...emptyDraft, clientId: clients[0]?.id ?? "" });
+        router.refresh();
+      });
     } else {
-      setInvoices((current) => [
-        {
-          id: draft.id.trim() || `INV-${1050 + current.length}`,
-          clientId: draft.clientId,
-          title: draft.title.trim(),
-          status: draft.status,
-          amountCents,
-          issuedAt: "2026-07-09",
-          dueAt: draft.dueAt,
-          paidAt: draft.status === "paid" ? "2026-07-09" : undefined,
-        },
-        ...current,
-      ]);
+      startTransition(async () => {
+        await createInvoice({
+          ...draft,
+          amount: draft.amount,
+          id: draft.id.trim() || `INV-${1050 + invoices.length}`,
+        });
+        setDraft({ ...emptyDraft, clientId: clients[0]?.id ?? "" });
+        router.refresh();
+      });
     }
-
-    setDraft(emptyDraft);
   }
 
-  function editInvoice(invoice: Invoice) {
+  function editInvoice(invoice: InvoiceRecord) {
     setEditingId(invoice.id);
     setDraft({
       id: invoice.id,
@@ -134,14 +135,15 @@ export function InvoiceWorkspace() {
     });
   }
 
-  function deleteInvoice(invoiceId: string) {
-    setInvoices((current) =>
-      current.filter((invoice) => invoice.id !== invoiceId),
-    );
-    if (editingId === invoiceId) {
-      setEditingId(null);
-      setDraft(emptyDraft);
-    }
+  function removeInvoice(invoiceId: string) {
+    startTransition(async () => {
+      await deleteInvoiceAction(invoiceId);
+      if (editingId === invoiceId) {
+        setEditingId(null);
+        setDraft({ ...emptyDraft, clientId: clients[0]?.id ?? "" });
+      }
+      router.refresh();
+    });
   }
 
   return (
@@ -279,12 +281,17 @@ export function InvoiceWorkspace() {
               <button className="min-h-11 rounded-md bg-[var(--accent)] px-4 text-sm font-semibold text-white">
                 {editingId ? "Save changes" : "Create invoice"}
               </button>
+              {isPending ? (
+                <span className="inline-flex min-h-11 items-center text-sm font-semibold text-[var(--muted)]">
+                  Saving...
+                </span>
+              ) : null}
               {editingId ? (
                 <button
                   className="min-h-11 rounded-md border border-[var(--line)] px-4 text-sm font-semibold"
                   onClick={() => {
                     setEditingId(null);
-                    setDraft(emptyDraft);
+                    setDraft({ ...emptyDraft, clientId: clients[0]?.id ?? "" });
                   }}
                   type="button"
                 >
@@ -349,7 +356,7 @@ export function InvoiceWorkspace() {
                           {invoice.title}
                         </span>
                       </td>
-                      <td className="px-4 py-4">{getClientName(invoice.clientId)}</td>
+                      <td className="px-4 py-4">{invoice.clientName}</td>
                       <td className="px-4 py-4 font-semibold">
                         {formatCurrency(invoice.amountCents)}
                       </td>
@@ -374,7 +381,7 @@ export function InvoiceWorkspace() {
                           </button>
                           <button
                             className="rounded-md border border-[#a64618]/30 px-3 py-2 text-xs font-semibold text-[#923a14]"
-                            onClick={() => deleteInvoice(invoice.id)}
+                            onClick={() => removeInvoice(invoice.id)}
                             type="button"
                           >
                             Delete
