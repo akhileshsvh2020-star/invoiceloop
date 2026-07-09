@@ -2,7 +2,7 @@
 
 > A focused invoice and payment-tracking dashboard for freelancers and small service businesses.
 
-**Live demo:** coming after Vercel deployment  
+**Live demo:** https://invoiceloop.vercel.app  
 **Demo login:** demo@invoiceloop.app / InvoiceLoop@2026
 
 Built for Digital Heroes digitalheroesco.com training task.
@@ -48,6 +48,10 @@ Open http://localhost:3000.
 
 See [docs/architecture.md](docs/architecture.md) for the planned data model and authorization notes.
 
+## Case Study
+
+See [docs/case-study.md](docs/case-study.md) for the problem, approach, result, and learning report.
+
 ## Project Plan
 
 See [plan.md](plan.md) for scope, acceptance criteria, and build milestones.
@@ -71,7 +75,8 @@ pnpm build
 - [x] Reports page.
 - [x] SEO basics and custom 404.
 - [ ] Pagination.
-- [ ] Deployment, screenshots, demo video, and case study.
+- [x] Deployment and case study.
+- [ ] Screenshots and demo video.
 
 ## License
 
